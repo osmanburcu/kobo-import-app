@@ -6,6 +6,8 @@ pick a CSV, preview the JSON, and send every row as a submission.
 Each column name becomes a field (`geo/p1` → `{"geo": {"p1": ...}}`), so it works
 with any form, including repeat groups.
 
+**New to this?** Follow the step-by-step [Beginner's Guide](TUTORIAL.md).
+
 ## Download
 
 Get `Kobo-CSV-Import.exe` from the [latest release](../../releases/latest).
