@@ -28,7 +28,7 @@ You do not need to install Python or know any programming.
 
 The app is a single file. You do not install it, you just open it.
 
-1. Open the [download page for the latest version](https://github.com/osmanburcu/kobo-import-app/releases/latest) (v1.1.0 at the time of writing).
+1. Open the [download page for the latest version](https://github.com/osmanburcu/kobo-import-app/releases/latest) (v1.2.0 at the time of writing).
 2. Under **Assets**, click **Kobo-CSV-Import.exe**. Your browser saves it, usually in your **Downloads** folder.
 3. Move the file somewhere easy to find, such as your Desktop.
 4. Double-click **Kobo-CSV-Import.exe** to open it.
