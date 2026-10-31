@@ -26,6 +26,12 @@ tick *Add Python to PATH* during setup). Nothing else needs to be installed.
 
 ## Use
 
+The **Kobo connection** box at the top (URL, Form UID, token, delay) is shared by all
+pages: **Import new data** adds new submissions, **Update existing data** changes answers
+in submissions already in Kobo (see [Update existing data](#update-existing-data)), and
+**Copy from another form** copies submissions between forms (see
+[Copy from another form](#copy-from-another-form)).
+
 1. **CSV file:** click *Browse…* and choose the file. A preview opens straight away.
    If the form has repeat groups, also choose the **Repeat CSV files**, see
    [Repeat groups](#repeat-groups).
@@ -47,6 +53,60 @@ tick *Add Python to PATH* during setup). Nothing else needs to be installed.
 6. **Save results…** saves a CSV with the outcome of every row.
 
 The settings are remembered for next time, except the token, which you enter each time.
+
+## Update existing data
+
+The **Update existing data** page changes answers in submissions that are already in Kobo.
+The old values are replaced, so always click **Preview changes** first: it reads the
+submissions from Kobo and lists what will change, without changing anything.
+
+**Find and replace in one column**
+
+| Field | Value |
+|---|---|
+| Column | The question to change, e.g. `geo/p2`. Click **Load columns** to pick it from a list |
+| Replace value | The current value to look for, e.g. `Merkez`. **Leave empty to change this column in every submission** |
+| With new value | The value to put in its place |
+
+**New values from a CSV file**
+
+Use this when each submission gets its own new value. The CSV needs an `_id` column
+(or `_uuid`) saying which submission each row changes; get them from a Kobo export.
+Every other column is a question to change. Empty cells are left as they are.
+
+```csv
+_id;geo/p2;geo/p3
+101;Center;Mahalle 1
+102;Center;
+```
+
+Then click **Update in Kobo** and confirm. Each submission shows as OK or FAILED, and
+**Save results…** saves the outcome. Questions inside repeat groups cannot be changed
+this way.
+
+## Copy from another form
+
+The **Copy from another form** page pulls every submission of a source form and submits
+them to the form in the **Kobo connection** box. The source can be in another account,
+or on another Kobo server.
+
+| Field | Value |
+|---|---|
+| Source Kobo server | e.g. `https://kf.kobotoolbox.org` or `https://eu.kobotoolbox.org` |
+| Source Form UID | UID of the form to copy from |
+| Source API token | Token of the account that owns the source form. Leave empty if it is the same account |
+
+1. Click **Match columns**. The app reads both forms and fills the list with one line per
+   source column: `source = target`. Columns with the same path are paired, and so are
+   questions with the same name in differently named groups (`hh/village = household/village`).
+2. Check the list. Type a target where none was found, or clear a target to leave that
+   column out. Repeat groups have their own line (`hh/members = household/members`).
+3. **Preview** shows how many submissions will be copied, which columns are left out,
+   and the JSON of the first one.
+4. **Copy first submission only**, check it in Kobo, then **Copy all**.
+
+The source `_uuid` is kept, so copying the same submissions again gives DUPLICATE
+instead of copies. Attachments (photos, audio, files) are not copied.
 
 ## CSV rules
 

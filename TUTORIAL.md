@@ -79,18 +79,18 @@ Sahinbey;Mahalle 1;Ayse;5;6b1f3c2e-1d4a-4c55-9a0b-1f2e3d4c5b6a
 
 ## Step 4: Fill in the settings
 
-Go back to the **Kobo CSV Import** window. Fill in the **Settings** box from top to bottom.
+Go back to the **Kobo CSV Import** window. Fill in the **Kobo connection** box at the top, then the **Import new data** page below it.
 
 | Field | What to put there |
 | --- | --- |
-| CSV file | Click **Browse…** and choose the file you saved in Step 3. A preview appears below straight away. |
-| Repeat CSV files (optional) | Leave empty, unless your form has repeat groups (see [Forms with repeat groups](#forms-with-repeat-groups)). |
 | Kobo URL | `https://kf.kobotoolbox.org/YOUR-USERNAME/submission?format=json` with **YOUR-USERNAME** replaced by the username from Step 2. |
 | Form UID | The Form UID from Step 2. |
 | API token | The token from Step 2. It shows as dots, which is normal. |
+| Delay between rows (ms) | Leave it at `200`. This short pause between rows keeps Kobo from being overloaded. |
+| CSV file | Click **Browse…** and choose the file you saved in Step 3. A preview appears below straight away. |
+| Repeat CSV files (optional) | Leave empty, unless your form has repeat groups (see [Forms with repeat groups](#forms-with-repeat-groups)). |
 | Column map (JSON) | Leave it as `{}`. You only change it if your column names differ from the form's names. |
 | Skip columns | Leave empty. To leave some columns out, type their names separated by commas, such as `start,end,deviceid`. |
-| Delay between rows (ms) | Leave it at `200`. This short pause between rows keeps Kobo from being overloaded. |
 
 The Kobo URL box may already hold someone else's username from when the app was made. Always replace it with yours.
 
@@ -158,6 +158,38 @@ Click **Preview** and check each repeat group shows the right number of entries.
 
 To practise first, try the files in [samples/repeat_example](samples/repeat_example) with **Preview**.
 
+## Change data that is already in Kobo
+
+Use the **Update existing data** page to fix answers in submissions already in Kobo, for example to correct a misspelled village name everywhere. The old values are replaced and cannot be brought back from the app, so always preview first.
+
+1. Fill in the **Kobo connection** box as in Step 4.
+2. Click the **Update existing data** tab.
+3. Choose how to change the data:
+   - **Find and replace in one column:** click **Load columns** and pick the question from the **Column** list. In **Replace value**, type the answer to look for, such as `Merkez`. In **With new value**, type what it should become, such as `Center`. To change that question in **every** submission, leave **Replace value** empty.
+   - **New values from a CSV file:** use this when each submission gets a different new value. Export the form's data from Kobo (as in Step 3), keep the `_id` column and the columns you want to change, and type the new values. Leave a cell empty to keep its current answer. Save it as CSV and choose it with **Browse…**.
+4. Click **Preview changes**. The box at the bottom lists each submission that will change, with its old and new value. Nothing is changed yet.
+5. If the list is right, click **Update in Kobo**, then **Yes**. Each submission shows as **OK** or **FAILED**.
+6. Open a few submissions in Kobo to check, and click **Save results…** to keep a record.
+
+Answers inside repeat groups cannot be changed this way.
+
+## Copy data from one form to another
+
+Use the **Copy from another form** page to move submissions from one form into another, for example from an old version of a survey into a new one. The two forms can be in different Kobo accounts.
+
+1. In the **Kobo connection** box, fill in the form that should **receive** the data (as in Step 4).
+2. Click the **Copy from another form** tab and fill in the form the data comes **from**:
+   - **Source Kobo server:** leave `https://kf.kobotoolbox.org` unless the form is on another Kobo server.
+   - **Source Form UID:** found the same way as in Step 2.
+   - **Source API token:** the token of the account that owns that form. Leave it empty if both forms are in your account.
+3. Click **Match columns**. The big box fills with one line per question, such as `hh/village = household/village`: the left side is the question in the source form, the right side is where it goes in the receiving form. The app pairs questions with the same name even when their groups are named differently.
+4. Read the list. If a line ends with `=` and nothing after it, no matching question was found: type the right name after `=`, or leave it empty to skip that question.
+5. Click **Preview**. The bottom box shows how many submissions will be copied, any questions left out, and how the first one will look.
+6. Click **Copy first submission only** and check it in the receiving form in Kobo.
+7. If it looks right, click **Copy all**, then **Yes**.
+
+Copying the same submissions again shows **DUPLICATE** instead of making copies. Photos and other attached files are not copied.
+
 ## When something goes wrong
 
 Find the message you see in the app, then follow the fix.
@@ -168,7 +200,7 @@ Find the message you see in the app, then follow the fix.
 | Enter the Kobo URL, with {username} replaced… | The Kobo URL box is not filled in correctly. | Paste the URL from Step 4 with your own username. |
 | Enter your Kobo API token. | The token box is empty. | Paste your token from Step 2. It is not saved between uses. |
 | Column map must be JSON… | The Column map box has a typing mistake. | Change it back to `{}`. |
-| HTTP 401 (check the token) | Kobo does not accept your token. | Copy the token again from Kobo and paste it with no extra spaces. |
+| HTTP 401 (check the token) | Kobo does not accept your token. | Copy the token again from Kobo and paste it with no extra spaces. When copying between accounts, check the source token belongs to the account that owns the source form. |
 | HTTP 403 | Your account cannot submit to this form. | Ask the form's owner to give you permission to add submissions. |
 | HTTP 404 | Kobo cannot find the address. | Check your username in the Kobo URL and the Form UID, letter by letter. |
 | HTTP 400 | An answer does not fit its question. | Look for text in a number question, a choice label instead of its code, or a date in the wrong format. |
